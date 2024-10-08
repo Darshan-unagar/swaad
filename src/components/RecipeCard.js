@@ -1,10 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useTheme } from './ThemeContext'; 
 
 const RecipeCard = ({ recipe }) => {
+  const { isDarkMode } = useTheme();
+
+  const cardBgColor = isDarkMode ? 'bg-[#140f00]' : 'bg-white';
+  const textColor = isDarkMode ? 'text-white' : 'text-black';
+
   return (
-    <div className="bg-[#140f00] text-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-      <Link to={`/recipe/${recipe.id}`}>
+    <div className={`${cardBgColor} ${textColor} rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group`}>
+      <a href={`/recipe/${recipe.id}`}>
         <div className="relative h-56">
           <img
             className="w-full h-full object-cover transition-transform transform group-hover:scale-105"
@@ -13,14 +18,14 @@ const RecipeCard = ({ recipe }) => {
           />
         </div>
         <div className="p-4">
-          <h2 className="text-lg font-semibold">
-            {recipe.name}
-          </h2>
-          <div className="text-[#fa9205] mt-2 text-sm flex items-center">
-          <span className="material-icons" style={{ transform: 'rotate(45deg)', fontSize: '24px' }}>arrow_upward</span>
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold">
+              {recipe.name}
+            </h2>
+            <span className="material-icons text-[#fa9205]" style={{ transform: 'rotate(45deg)', fontSize: '24px' }}>arrow_upward</span>
           </div>
         </div>
-      </Link>
+      </a>
     </div>
   );
 };
