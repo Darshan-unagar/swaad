@@ -17,14 +17,14 @@ const RecipeList = () => {
       {
         method: "GET",
         headers: {
-          "x-rapidapi-key": "4deda5c1acmsha35316d39f00cc4p118337jsn15be19eeff0e",
+          "x-rapidapi-key": process.env.REACT_APP_RAPIDAPI_KEY,
           "x-rapidapi-host": "tasty.p.rapidapi.com",
         },
       }
     )
       .then((response) => response.json())
       .then((data) => {
-        setRecipes((prevRecipes) => [...prevRecipes, ...data.results]); // Append new recipes
+        setRecipes((prevRecipes) => [...prevRecipes, ...data.results]);
         setLoading(false);
         setLoadingMore(false);
       })
@@ -44,7 +44,9 @@ const RecipeList = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {loading
           ? Array.from({ length: 8 }).map((_, index) => <RecipeSkeleton key={index} />)
-          : recipes.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)}
+          : recipes.map((recipe, index) => (
+              <RecipeCard key={recipe.id ? recipe.id : `recipe-${index}`} recipe={recipe} />
+            ))}
       </div>
 
       {/* Load More Button */}

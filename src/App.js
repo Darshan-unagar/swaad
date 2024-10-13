@@ -12,8 +12,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-// import dotenv from 'dotenv';
-// dotenv.config();
+
 function App() {
   return (
     <ThemeProvider>

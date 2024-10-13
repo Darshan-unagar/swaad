@@ -17,15 +17,20 @@ const Skeleton = () => (
       {/* Skeleton for the recipe info */}
       <div className="lg:w-2/3 w-full">
         <div className="h-10 bg-gray-700 rounded-lg mb-4"></div> {/* Title */}
-        <div className="h-4 bg-gray-600 rounded-lg mb-4"></div> {/* Description */}
-        <div className="h-4 bg-gray-600 rounded-lg w-1/2 mb-4"></div> {/* Servings & Time */}
-
+        <div className="h-4 bg-gray-600 rounded-lg mb-4"></div>{" "}
+        {/* Description */}
+        <div className="h-4 bg-gray-600 rounded-lg w-1/2 mb-4"></div>{" "}
+        {/* Servings & Time */}
         {/* Quick Info Section */}
         <div className="bg-[#1a1a1a] p-4 rounded-lg shadow-md">
-          <div className="h-8 bg-gray-700 rounded-lg mb-4 w-1/3"></div> {/* Quick Info Title */}
-          <div className="h-4 bg-gray-600 rounded-lg mb-3"></div> {/* Difficulty */}
-          <div className="h-4 bg-gray-600 rounded-lg mb-3"></div> {/* Published Date */}
-          <div className="h-4 bg-gray-600 rounded-lg mb-3 w-1/2"></div> {/* Yields */}
+          <div className="h-8 bg-gray-700 rounded-lg mb-4 w-1/3"></div>{" "}
+          {/* Quick Info Title */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-3"></div>{" "}
+          {/* Difficulty */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-3"></div>{" "}
+          {/* Published Date */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-3 w-1/2"></div>{" "}
+          {/* Yields */}
         </div>
       </div>
     </div>
@@ -34,21 +39,29 @@ const Skeleton = () => (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Ingredients Section */}
       <div className="sticky top-10">
-        <div className="h-8 bg-gray-700 rounded-lg mb-4 w-1/3"></div> {/* Ingredients Title */}
+        <div className="h-8 bg-gray-700 rounded-lg mb-4 w-1/3"></div>{" "}
+        {/* Ingredients Title */}
         <div className="bg-[#1a1a1a] p-6 rounded-lg shadow-md">
-          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div> {/* Ingredient section */}
-          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div> {/* Ingredient section */}
-          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div> {/* Ingredient section */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div>{" "}
+          {/* Ingredient section */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div>{" "}
+          {/* Ingredient section */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div>{" "}
+          {/* Ingredient section */}
         </div>
       </div>
 
       {/* Instructions Section */}
       <div>
-        <div className="h-8 bg-gray-700 rounded-lg mb-4 w-1/3"></div> {/* Instructions Title */}
+        <div className="h-8 bg-gray-700 rounded-lg mb-4 w-1/3"></div>{" "}
+        {/* Instructions Title */}
         <div className="space-y-4">
-          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div> {/* Instruction */}
-          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div> {/* Instruction */}
-          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div> {/* Instruction */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div>{" "}
+          {/* Instruction */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div>{" "}
+          {/* Instruction */}
+          <div className="h-4 bg-gray-600 rounded-lg mb-4"></div>{" "}
+          {/* Instruction */}
         </div>
       </div>
     </div>
@@ -65,7 +78,7 @@ const RecipeDetails = () => {
     fetch(`https://tasty.p.rapidapi.com/recipes/get-more-info?id=${id}`, {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "4deda5c1acmsha35316d39f00cc4p118337jsn15be19eeff0e",
+        "x-rapidapi-key": process.env.REACT_APP_RAPIDAPI_KEY,
         "x-rapidapi-host": "tasty.p.rapidapi.com",
       },
     })
@@ -74,6 +87,7 @@ const RecipeDetails = () => {
         setRecipe(data);
         setLoading(false);
       })
+
       .catch((error) => console.error("Error fetching recipe details:", error));
   }, [id]);
 
@@ -117,9 +131,9 @@ const RecipeDetails = () => {
             <h3 className="text-2xl font-bold text-[#fa9205] mb-2">
               Quick Info
             </h3>
-            <p>
+            {/* <p>
               <strong>Difficulty:</strong> {recipe.difficulty || "Not Available"}
-            </p>
+            </p> */}
             <p>
               <strong>Published Date:</strong>{" "}
               {new Date(recipe.created_at * 1000).toLocaleDateString()}

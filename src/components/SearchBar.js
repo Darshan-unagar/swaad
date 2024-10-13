@@ -8,12 +8,13 @@ const SearchBar = () => {
   const [results, setResults] = useState([]);
   const [visibleResults, setVisibleResults] = useState(5);
   const modalRef = useRef(null);
+  const inputRef = useRef(null); // Ref for input element
 
   const fetchSearchResults = async (query) => {
     const options = {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "ab21637bf2msh7ce8992ee0b2b89p17a8c4jsnbc6e5483e769",
+        "x-rapidapi-key": process.env.REACT_APP_RAPIDAPI_KEY,
         "x-rapidapi-host": "tasty.p.rapidapi.com",
       },
     };
@@ -57,6 +58,13 @@ const SearchBar = () => {
     };
   }, []);
 
+  // Use onEntered to focus input field after transition completes
+  const handleTransitionEntered = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
     if (e.target.value) {
@@ -85,7 +93,16 @@ const SearchBar = () => {
         </button>
       </div>
 
-      <Transition show={isOpen}>
+      <Transition
+        show={isOpen}
+        enter="transition-opacity duration-300"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-300"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+        afterEnter={handleTransitionEntered} // Focus input when transition completes
+      >
         <div
           className="fixed inset-0 z-50 flex items-center justify-center backdrop-filter backdrop-blur-md bg-black bg-opacity-40"
           aria-hidden="true"
@@ -98,6 +115,7 @@ const SearchBar = () => {
               <BiSearch size={24} className="text-gray-500 mr-2" />
               <input
                 type="text"
+                ref={inputRef} // Assign ref to input
                 placeholder="Search recipes..."
                 value={inputValue}
                 onChange={handleInputChange}
@@ -108,9 +126,9 @@ const SearchBar = () => {
             <div className="mt-4">
               {results.slice(0, visibleResults).map((result, index) => (
                 <a
-                  key={index}
+                  key={`${result.id}`} // Use both id and index for unique keys
                   href={`/recipe/${result.id}`} // Use <a> for navigation
-                  className="block py-2 border-b border-gray-200 hover:bg-gray-100"
+                  className="block py-2 border-b border-gray-200 hover:bg-zinc-800"
                   onClick={() => setIsOpen(false)} // Close search bar when clicking
                 >
                   <p>{result.name}</p>

@@ -1,53 +1,55 @@
 import React, { useState, useEffect } from "react";
-import { useTheme } from "./ThemeContext"; // Import the theme context
-import { FaPaperPlane } from "react-icons/fa"; // Import the arrow icon from react-icons
-import { HfInference } from "@huggingface/inference"; // Import the Hugging Face Inference library
+import { useTheme } from "./ThemeContext";
+import { FaPaperPlane } from "react-icons/fa";
+import { HfInference } from "@huggingface/inference";
 import "../index.css";
 
 const ChatPage = ({ chatMessages, setChatMessages }) => {
-  const { isDarkMode } = useTheme(); // Access the theme context
+  const { isDarkMode } = useTheme();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState(chatMessages || []); // Initialize with props
-  const [loading, setLoading] = useState(false); // State to track loading status
-  const [dots, setDots] = useState(""); // State for typing indicator dots
+  const [messages, setMessages] = useState(chatMessages || []);
+  const [loading, setLoading] = useState(false);
+  const [dots, setDots] = useState("");
 
-  // Initialize Hugging Face inference
   const inference = new HfInference(process.env.REACT_APP_HUGGING_FACE_API_KEY);
 
-  // Load messages from local storage
   useEffect(() => {
-    const storedMessages = JSON.parse(localStorage.getItem("chatMessages")) || [];
+    const storedMessages =
+      JSON.parse(localStorage.getItem("chatMessages")) || [];
     setMessages(storedMessages);
   }, []);
 
-  // Function to save messages to local storage
   const saveMessagesToLocalStorage = (messages) => {
     localStorage.setItem("chatMessages", JSON.stringify(messages));
   };
 
-
-
-  // Function to send the message
   const sendMessage = async () => {
     if (message.trim()) {
       const userMessage = { text: message, user: "You" };
       const updatedMessages = [...messages, userMessage];
       setMessages(updatedMessages);
-      saveMessagesToLocalStorage(updatedMessages); // Save to local storage
+      saveMessagesToLocalStorage(updatedMessages);
       setMessage("");
       setLoading(true);
 
       try {
         let aiResponse = "";
+        const chefInstruction =
+          "Imagine you are a professional chef who knows only cooking and recipe sharing. Please respond only with cooking-related answers.";
+
+        const promptWithRole = [
+          { role: "system", content: chefInstruction },
+          { role: "user", content: message },
+        ];
+
         for await (const chunk of inference.chatCompletionStream({
           model: "mistralai/Mistral-Nemo-Instruct-2407",
-          messages: [{ role: "user", content: message }],
-          max_tokens: 500, // Increase max_tokens for longer responses
+          messages: promptWithRole,
+          max_tokens: 500,
         })) {
           aiResponse += chunk.choices[0]?.delta?.content || "";
         }
 
-        // Simple response filtering
         if (aiResponse.includes("silence")) {
           aiResponse =
             "I'm sorry, I couldn't generate a meaningful response. Please try rephrasing your question.";
@@ -60,7 +62,7 @@ const ChatPage = ({ chatMessages, setChatMessages }) => {
         const aiMessage = { text: aiResponse.trim(), user: "AI" };
         const finalMessages = [...updatedMessages, aiMessage];
         setMessages(finalMessages);
-        saveMessagesToLocalStorage(finalMessages); // Save updated messages to local storage
+        saveMessagesToLocalStorage(finalMessages);
       } catch (error) {
         console.error("Error fetching AI response:", error);
       } finally {
@@ -75,15 +77,14 @@ const ChatPage = ({ chatMessages, setChatMessages }) => {
     }
   };
 
-  // Typing indicator effect
   useEffect(() => {
     if (loading) {
       const interval = setInterval(() => {
-        setDots((prev) => (prev.length < 3 ? prev + "." : "")); // Cycle through dots
+        setDots((prev) => (prev.length < 3 ? prev + "." : ""));
       }, 300);
-      return () => clearInterval(interval); // Cleanup on unmount
+      return () => clearInterval(interval);
     }
-    setDots(""); // Reset dots when loading is false
+    setDots("");
   }, [loading]);
 
   return (
@@ -150,10 +151,10 @@ const ChatPage = ({ chatMessages, setChatMessages }) => {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyPress} // Trigger sendMessage on Enter key press
+            onKeyDown={handleKeyPress}
             placeholder="Type a message..."
             className="w-full p-3 pr-12 border rounded-lg bg-gray-200 dark:bg-[#140f00] text-black dark:text-white"
-            style={{ minWidth: "0" }} // Ensure full width without overflow
+            style={{ minWidth: "0" }}
           />
           <button
             onClick={sendMessage}
