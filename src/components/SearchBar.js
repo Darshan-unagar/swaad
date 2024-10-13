@@ -110,7 +110,7 @@ const SearchBar = () => {
                 <a
                   key={index}
                   href={`/recipe/${result.id}`} // Use <a> for navigation
-                  className="block py-2 border-b border-gray-200 hover:bg-gray-100"
+                  className="block py-2 border-b border-gray-200 hover:bg-zinc-800"
                   onClick={() => setIsOpen(false)} // Close search bar when clicking
                 >
                   <p>{result.name}</p>
