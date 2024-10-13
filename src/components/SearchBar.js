@@ -146,7 +146,7 @@ const SearchBar = () => {
             )}
 
             <button
-              className="absolute top-10 right-10 text-sm text-gray-500 hover:text-gray-800"
+              className="absolute top-10 right-10 text-sm text-gray-500 hover:text-zinc-800"
               onClick={() => setIsOpen(false)}
             >
               Esc
