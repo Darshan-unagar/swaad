@@ -1,3 +1,4 @@
+// App.js
 import React, { useState } from "react";
 import Header from "./components/Header";
 import Slogan from "./components/Slogan";
@@ -12,13 +13,16 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import ErrorBoundary from "./components/ErrorBoundary"; // Import the ErrorBoundary
 
 function App() {
   return (
     <ThemeProvider>
       <Router>
         <div className="min-h-screen bg-light dark:bg-dark text-black dark:text-white">
-          <MainContent />
+          <ErrorBoundary>
+            <MainContent />
+          </ErrorBoundary>
         </div>
       </Router>
     </ThemeProvider>
@@ -28,13 +32,12 @@ function App() {
 // Main Content
 const MainContent = () => {
   const location = useLocation();
-
   const [chatMessages, setChatMessages] = useState([]); // Initialize chat messages state
 
   const clearChat = () => {
     setChatMessages([]); // Clear messages in the parent state
     localStorage.removeItem("chatMessages"); // Clear from local storage
-   window.location.reload()
+    window.location.reload();
   };
 
   return (
